@@ -1,0 +1,13 @@
+Flask
+openai
+PyPDF2
+python-docx
+SQLAlchemy
+Flask-SQLAlchemy
+python-dotenv
+celery
+redis
+pdfplumber
+docx2txt
+Werkzeug
+requests

@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+
+{% block title %}Processing Documents - AI Job Optimizer{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold text-primary">
+                <i class="fas fa-cogs me-3"></i>
+                AI Processing Your Documents
+            </h1>
+            <p class="lead text-muted">Analyzing job requirements and optimizing your application materials</p>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="text-center">
+                        <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="mt-2 small fw-bold text-success">Upload</div>
+                    </div>
+                    <div class="flex-grow-1 mx-3">
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar bg-success" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <span class="loading-spinner" style="width: 25px; height: 25px; border-width: 2px;"></span>
+                        </div>
+                        <div class="mt-2 small fw-bold text-primary">Process</div>
+                    </div>
+                    <div class="flex-grow-1 mx-3">
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar bg-warning progress-bar-animated" id="progressBar" style="width: 25%;"></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <span class="fw-bold">3</span>
+                        </div>
+                        <div class="mt-2 small text-muted">Review</div>
+                    </div>
+                    <div class="flex-grow-1 mx-3">
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar bg-secondary" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <span class="fw-bold">4</span>
+                        </div>
+                        <div class="mt-2 small text-muted">Download</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Processing Status -->
+        <div class="card mb-4" id="processingCard">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-robot me-2"></i>
+                    AI Analysis Progress
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Current Step:</h6>
+                        <p class="lead" id="currentStep">Initializing analysis...</p>
+                        
+                        <div class="progress mb-3">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                 id="stepProgress" style="width: 10%"></div>
+                        </div>
+                        
+                        <div id="processingSteps">
+                            <div class="step-item mb-2" data-step="1">
+                                <i class="fas fa-circle-notch fa-spin text-primary me-2"></i>
+                                <span>Parsing uploaded documents...</span>
+                            </div>
+                            <div class="step-item mb-2 text-muted" data-step="2">
+                                <i class="far fa-circle me-2"></i>
+                                <span>Analyzing job requirements...</span>
+                            </div>
+                            <div class="step-item mb-2 text-muted" data-step="3">
+                                <i class="far fa-circle me-2"></i>
+                                <span>Extracting keywords and skills...</span>
+                            </div>
+                            <div class="step-item mb-2 text-muted" data-step="4">
+                                <i class="far fa-circle me-2"></i>
+                                <span>Optimizing resume content...</span>
+                            </div>
+                            <div class="step-item mb-2 text-muted" data-step="5">
+                                <i class="far fa-circle me-2"></i>
+                                <span>Optimizing cover letter...</span>
+                            </div>
+                            <div class="step-item mb-2 text-muted" data-step="6">
+                                <i class="far fa-circle me-2"></i>
+                                <span>Running ATS compatibility check...</span>
+                            </div>
+                            <div class="step-item mb-2 text-muted" data-step="7">
+                                <i class="far fa-circle me-2"></i>
+                                <span>Generating feedback and scores...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Estimated Time:</h6>
+                        <p class="text-muted">2-3 minutes</p>
+                        
+                        <h6>What We're Doing:</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Extracting text from your documents</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Identifying key job requirements</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Finding optimization opportunities</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Ensuring ATS compatibility</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section (Hidden initially) -->
+        <div class="card" id="resultsCard" style="display: none;">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Analysis Complete!
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center mb-4">
+                    <div class="col-md-3">
+                        <div class="score-circle score-good" id="keywordScore">
+                            8.2
+                        </div>
+                        <h6 class="mt-2">Keyword Match</h6>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="score-circle score-excellent" id="atsScore">
+                            9.1
+                        </div>
+                        <h6 class="mt-2">ATS Compatible</h6>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="score-circle score-good" id="relevanceScore">
+                            7.8
+                        </div>
+                        <h6 class="mt-2">Content Relevance</h6>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="score-circle score-good" id="overallScore">
+                            8.4
+                        </div>
+                        <h6 class="mt-2">Overall Score</h6>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Key Improvements Made:</h6>
+                        <ul id="improvementsList">
+                            <li>Added 12 relevant keywords from job description</li>
+                            <li>Optimized section headers for ATS compatibility</li>
+                            <li>Enhanced skill descriptions with quantifiable results</li>
+                            <li>Tailored cover letter to company culture</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Top Keywords Found:</h6>
+                        <div id="keywordsContainer">
+                            <!-- Keywords will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="button" class="btn btn-success btn-lg px-5" id="reviewBtn">
+                        <i class="fas fa-eye me-2"></i>
+                        Review & Edit Documents
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Section (Hidden initially) -->
+        <div class="card border-danger" id="errorCard" style="display: none;">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Processing Error
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="text-danger" id="errorMessage">Something went wrong during processing.</p>
+                <button type="button" class="btn btn-primary" onclick="location.reload()">
+                    <i class="fas fa-redo me-2"></i>
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    const sessionId = '{{ session.id }}';
+    let currentStepNum = 1;
+    
+    // Start the analysis process
+    setTimeout(startAnalysis, 1000);
+    
+    function startAnalysis() {
+        // Simulate processing steps
+        const steps = [
+            { step: 1, text: "Parsing uploaded documents...", duration: 2000 },
+            { step: 2, text: "Analyzing job requirements...", duration: 3000 },
+            { step: 3, text: "Extracting keywords and skills...", duration: 4000 },
+            { step: 4, text: "Optimizing resume content...", duration: 5000 },
+            { step: 5, text: "Optimizing cover letter...", duration: 3000 },
+            { step: 6, text: "Running ATS compatibility check...", duration: 2000 },
+            { step: 7, text: "Generating feedback and scores...", duration: 2000 }
+        ];
+        
+        processSteps(steps, 0);
+    }
+    
+    function processSteps(steps, index) {
+        if (index >= steps.length) {
+            // All steps complete, call the API
+            callAnalysisAPI();
+            return;
+        }
+        
+        const step = steps[index];
+        updateCurrentStep(step.step, step.text);
+        
+        setTimeout(() => {
+            completeStep(step.step);
+            processSteps(steps, index + 1);
+        }, step.duration);
+    }
+    
+    function updateCurrentStep(stepNum, text) {
+        $('#currentStep').text(text);
+        
+        // Update progress bar
+        const progress = (stepNum / 7) * 100;
+        $('#stepProgress').css('width', progress + '%');
+        $('#progressBar').css('width', (25 + progress * 0.75) + '%');
+        
+        // Update step icons
+        $('.step-item').removeClass('text-primary').addClass('text-muted');
+        $('.step-item i').removeClass('fa-circle-notch fa-spin text-primary').addClass('far fa-circle');
+        
+        $(`.step-item[data-step="${stepNum}"]`).removeClass('text-muted').addClass('text-primary');
+        $(`.step-item[data-step="${stepNum}"] i`).removeClass('far fa-circle').addClass('fas fa-circle-notch fa-spin text-primary');
+    }
+    
+    function completeStep(stepNum) {
+        $(`.step-item[data-step="${stepNum}"]`).removeClass('text-primary').addClass('text-success');
+        $(`.step-item[data-step="${stepNum}"] i`).removeClass('fas fa-circle-notch fa-spin text-primary').addClass('fas fa-check-circle text-success');
+    }
+    
+    function callAnalysisAPI() {
+        $.ajax({
+            url: `/api/analyze/${sessionId}`,
+            method: 'POST',
+            success: function(response) {
+                if (response.success) {
+                    showResults(response);
+                } else {
+                    showError(response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                showError('Network error occurred. Please try again.');
+            }
+        });
+    }
+    
+    function showResults(data) {
+        // Update scores
+        if (data.scores) {
+            updateScore($('#keywordScore'), data.scores.keyword_match || 7.5);
+            updateScore($('#atsScore'), data.scores.ats_compatibility || 8.0);
+            updateScore($('#relevanceScore'), data.scores.content_relevance || 7.8);
+            updateScore($('#overallScore'), data.scores.overall || 7.7);
+        }
+        
+        // Show keywords
+        if (data.analysis && data.analysis.keywords) {
+            showKeywords(data.analysis.keywords);
+        }
+        
+        // Hide processing card and show results
+        $('#processingCard').slideUp();
+        $('#resultsCard').slideDown();
+        
+        // Update progress steps
+        updateProgressSteps(true);
+    }
+    
+    function showKeywords(keywords) {
+        const container = $('#keywordsContainer');
+        container.empty();
+        
+        // Flatten all keywords
+        const allKeywords = [];
+        if (keywords.high_priority) allKeywords.push(...keywords.high_priority);
+        if (keywords.medium_priority) allKeywords.push(...keywords.medium_priority);
+        if (keywords.low_priority) allKeywords.push(...keywords.low_priority);
+        
+        // Show first 10 keywords
+        allKeywords.slice(0, 10).forEach(keyword => {
+            container.append(`<span class="badge bg-primary me-1 mb-1">${keyword}</span>`);
+        });
+    }
+    
+    function showError(message) {
+        $('#errorMessage').text(message);
+        $('#processingCard').slideUp();
+        $('#errorCard').slideDown();
+    }
+    
+    function updateProgressSteps(complete = false) {
+        if (complete) {
+            // Update step 2 to complete
+            $('.d-flex .text-center:nth-child(3) .bg-primary').removeClass('bg-primary').addClass('bg-success')
+                .html('<i class="fas fa-check"></i>');
+            $('.d-flex .text-center:nth-child(3) .text-primary').removeClass('text-primary').addClass('text-success');
+            
+            // Update progress bar to 100%
+            $('.d-flex .progress:first .progress-bar').css('width', '100%').removeClass('bg-warning').addClass('bg-success');
+        }
+    }
+    
+    // Review button click handler
+    $('#reviewBtn').on('click', function() {
+        window.location.href = `/review/${sessionId}`;
+    });
+});
+</script>
+{% endblock %}

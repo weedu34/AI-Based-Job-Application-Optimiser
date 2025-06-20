@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Documents - AI Job Optimizer{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold text-primary">
+                <i class="fas fa-upload me-3"></i>
+                Optimize Your Job Application
+            </h1>
+            <p class="lead text-muted">
+                Upload your documents and let AI optimize them for maximum impact
+            </p>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="text-center">
+                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <span class="fw-bold">1</span>
+                        </div>
+                        <div class="mt-2 small fw-bold text-primary">Upload</div>
+                    </div>
+                    <div class="flex-grow-1 mx-3">
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar bg-secondary" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <span class="fw-bold">2</span>
+                        </div>
+                        <div class="mt-2 small text-muted">Process</div>
+                    </div>
+                    <div class="flex-grow-1 mx-3">
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar bg-secondary" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <span class="fw-bold">3</span>
+                        </div>
+                        <div class="mt-2 small text-muted">Review</div>
+                    </div>
+                    <div class="flex-grow-1 mx-3">
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar bg-secondary" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <span class="fw-bold">4</span>
+                        </div>
+                        <div class="mt-2 small text-muted">Download</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Form -->
+        <form method="POST" action="/upload" enctype="multipart/form-data" id="uploadForm">
+            <!-- Job Description Section -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-briefcase me-2"></i>
+                        Job Description
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Option 1: Upload File</h6>
+                            <div class="file-upload-area" onclick="document.getElementById('job_description').click()">
+                                <input type="file" id="job_description" name="job_description" accept=".pdf,.docx,.txt" style="display: none;">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                <p class="mb-2"><strong>Click or drag to upload job description</strong></p>
+                                <p class="small text-muted">Supports PDF, DOCX, TXT files</p>
+                                <div class="file-info text-primary"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Option 2: Paste Text</h6>
+                            <textarea class="form-control" name="job_description_text" rows="8" 
+                                     placeholder="Paste the job description here..." id="jobDescText"></textarea>
+                            <div class="form-text">
+                                <span class="text-success" id="textStatus" style="display: none;">
+                                    <i class="fas fa-check-circle me-1"></i>Job description text provided
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resume Section -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-user me-2"></i>
+                        Current Resume
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="file-upload-area" onclick="document.getElementById('resume').click()">
+                        <input type="file" id="resume" name="resume" accept=".pdf,.docx" required style="display: none;">
+                        <i class="fas fa-file-upload fa-3x text-muted mb-3"></i>
+                        <p class="mb-2"><strong>Upload your current resume</strong></p>
+                        <p class="small text-muted">PDF or DOCX format recommended</p>
+                        <div class="file-info text-success"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cover Letter Section -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-envelope me-2"></i>
+                        Current Cover Letter
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="file-upload-area" onclick="document.getElementById('cover_letter').click()">
+                        <input type="file" id="cover_letter" name="cover_letter" accept=".pdf,.docx,.txt" required style="display: none;">
+                        <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                        <p class="mb-2"><strong>Upload your current cover letter</strong></p>
+                        <p class="small text-muted">PDF, DOCX, or TXT format</p>
+                        <div class="file-info text-warning"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
+                    <i class="fas fa-rocket me-2"></i>
+                    Start Optimization
+                </button>
+            </div>
+        </form>
+
+        <!-- Features Section -->
+        <div class="row mt-5">
+            <div class="col-md-4 text-center mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-search fa-3x text-primary mb-3"></i>
+                        <h5>Smart Keyword Analysis</h5>
+                        <p class="text-muted">AI analyzes job descriptions to extract the most important keywords and requirements.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-magic fa-3x text-success mb-3"></i>
+                        <h5>Automatic Optimization</h5>
+                        <p class="text-muted">Your documents are automatically optimized to match job requirements while maintaining your voice.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-chart-line fa-3x text-warning mb-3"></i>
+                        <h5>ATS Compatibility</h5>
+                        <p class="text-muted">Ensures your resume passes Applicant Tracking Systems with proper formatting and keywords.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // File upload handling
+    function handleFileSelect(input, infoElement) {
+        $(input).on('change', function() {
+            const file = this.files[0];
+            if (file) {
+                $(infoElement).text(file.name);
+                validateForm();
+            }
+        });
+    }
+
+    // Set up file handlers
+    handleFileSelect('#job_description', '#job_description + .file-upload-area .file-info');
+    handleFileSelect('#resume', '#resume + .file-upload-area .file-info');
+    handleFileSelect('#cover_letter', '#cover_letter + .file-upload-area .file-info');
+
+    // Form validation
+    function validateForm() {
+        const jobDescFile = $('#job_description')[0].files.length > 0;
+        const jobDescText = $('textarea[name="job_description_text"]').val().trim();
+        const resume = $('#resume')[0].files.length > 0;
+        const coverLetter = $('#cover_letter')[0].files.length > 0;
+
+        // Job description: either file OR text (not both required)
+        const hasJobDescription = jobDescFile || (jobDescText.length > 0);
+        const isValid = hasJobDescription && resume && coverLetter;
+        
+        $('#submitBtn').prop('disabled', !isValid);
+        
+        if (isValid) {
+            $('#submitBtn').removeClass('btn-secondary').addClass('btn-primary');
+        } else {
+            $('#submitBtn').removeClass('btn-primary').addClass('btn-secondary');
+        }
+        
+        // Update job description visual feedback
+        if (jobDescFile) {
+            $('textarea[name="job_description_text"]').removeClass('is-invalid');
+        } else if (jobDescText.length > 10) {
+            $('textarea[name="job_description_text"]').removeClass('is-invalid').addClass('is-valid');
+        } else if (jobDescText.length > 0) {
+            $('textarea[name="job_description_text"]').removeClass('is-valid').addClass('is-invalid');
+        } else {
+            $('textarea[name="job_description_text"]').removeClass('is-valid is-invalid');
+        }
+    }
+
+    // Monitor form changes
+    $('input[type="file"], textarea').on('change input', validateForm);
+
+    // Initial validation
+    validateForm();
+
+    // Form submission
+    $('#uploadForm').on('submit', function(e) {
+        console.log('Form submitting to:', this.action);
+        console.log('Form method:', this.method);
+        showLoading($('#submitBtn'));
+        // Don't prevent default - let form submit normally
+    });
+
+    // File info display for drag and drop
+    $('.file-upload-area').each(function() {
+        const input = $(this).find('input[type="file"]');
+        const infoDiv = $(this).find('.file-info');
+        
+        input.on('change', function() {
+            const file = this.files[0];
+            if (file) {
+                infoDiv.text(`Selected: ${file.name}`);
+            } else {
+                infoDiv.text('');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

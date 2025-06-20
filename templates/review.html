@@ -1,0 +1,401 @@
+{% extends "base.html" %}
+
+{% block title %}Review & Edit - AI Job Optimizer{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h1 class="display-5 fw-bold text-primary">
+                <i class="fas fa-edit me-3"></i>
+                Review & Optimize Your Documents
+            </h1>
+            <p class="lead text-muted">Make real-time edits and watch your scores improve</p>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="text-center">
+                        <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="mt-2 small fw-bold text-success">Upload</div>
+                    </div>
+                    <div class="flex-grow-1 mx-3">
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar bg-success" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="mt-2 small fw-bold text-success">Process</div>
+                    </div>
+                    <div class="flex-grow-1 mx-3">
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar bg-success" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <span class="fw-bold">3</span>
+                        </div>
+                        <div class="mt-2 small fw-bold text-primary">Review</div>
+                    </div>
+                    <div class="flex-grow-1 mx-3">
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar bg-warning" style="width: 75%;"></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <span class="fw-bold">4</span>
+                        </div>
+                        <div class="mt-2 small text-muted">Download</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scores Dashboard -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Optimization Scores
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="score-circle score-good" id="keywordScoreDisplay">
+                            {{ "%.1f"|format(scores.keyword_match or 7.5) }}
+                        </div>
+                        <h6 class="mt-2">Keyword Match</h6>
+                        <div class="progress mt-2">
+                            <div class="progress-bar bg-warning" style="width: {{ (scores.keyword_match or 7.5) * 10 }}%"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="score-circle score-excellent" id="atsScoreDisplay">
+                            {{ "%.1f"|format(scores.ats_compatibility or 8.0) }}
+                        </div>
+                        <h6 class="mt-2">ATS Compatible</h6>
+                        <div class="progress mt-2">
+                            <div class="progress-bar bg-success" style="width: {{ (scores.ats_compatibility or 8.0) * 10 }}%"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="score-circle score-good" id="relevanceScoreDisplay">
+                            {{ "%.1f"|format(scores.content_relevance or 7.8) }}
+                        </div>
+                        <h6 class="mt-2">Content Relevance</h6>
+                        <div class="progress mt-2">
+                            <div class="progress-bar bg-info" style="width: {{ (scores.content_relevance or 7.8) * 10 }}%"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="score-circle score-good" id="overallScoreDisplay">
+                            {{ "%.1f"|format(scores.overall or 7.7) }}
+                        </div>
+                        <h6 class="mt-2">Overall Score</h6>
+                        <div class="progress mt-2">
+                            <div class="progress-bar bg-primary" style="width: {{ (scores.overall or 7.7) * 10 }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Editing Tabs -->
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" id="documentTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="resume-tab" data-bs-toggle="tab" data-bs-target="#resume" type="button" role="tab">
+                            <i class="fas fa-file-user me-2"></i>Resume
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="cover-letter-tab" data-bs-toggle="tab" data-bs-target="#cover-letter" type="button" role="tab">
+                            <i class="fas fa-envelope me-2"></i>Cover Letter
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="keywords-tab" data-bs-toggle="tab" data-bs-target="#keywords" type="button" role="tab">
+                            <i class="fas fa-tags me-2"></i>Keywords
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="documentTabContent">
+                    <!-- Resume Tab -->
+                    <div class="tab-pane fade show active" id="resume" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Original Resume</h6>
+                                <div class="border rounded p-3 bg-light" style="height: 400px; overflow-y: auto;">
+                                    <pre style="white-space: pre-wrap; font-size: 12px;">{{ session.original_resume_text or 'No resume text available' }}</pre>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6>Optimized Resume</h6>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="saveDocument('resume')">
+                                        <i class="fas fa-save me-1"></i>Save Changes
+                                    </button>
+                                </div>
+                                <textarea class="form-control document-editor" id="resumeEditor" style="height: 400px;" onchange="documentChanged('resume')">{{ session.optimized_resume_text or session.original_resume_text or 'No resume text available' }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cover Letter Tab -->
+                    <div class="tab-pane fade" id="cover-letter" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Original Cover Letter</h6>
+                                <div class="border rounded p-3 bg-light" style="height: 400px; overflow-y: auto;">
+                                    <pre style="white-space: pre-wrap; font-size: 12px;">{{ session.original_cover_letter_text or 'No cover letter text available' }}</pre>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6>Optimized Cover Letter</h6>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="saveDocument('cover_letter')">
+                                        <i class="fas fa-save me-1"></i>Save Changes
+                                    </button>
+                                </div>
+                                <textarea class="form-control document-editor" id="coverLetterEditor" style="height: 400px;" onchange="documentChanged('cover_letter')">{{ session.optimized_cover_letter_text or session.original_cover_letter_text or 'No cover letter text available' }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Keywords Tab -->
+                    <div class="tab-pane fade" id="keywords" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Extracted Keywords</h6>
+                                <div class="mb-3">
+                                    <label class="fw-bold text-danger">High Priority:</label>
+                                    <div id="highPriorityKeywords" class="mt-2">
+                                        {% if keywords.high_priority %}
+                                            {% for keyword in keywords.high_priority %}
+                                                <span class="badge bg-danger me-1 mb-1">{{ keyword }}</span>
+                                            {% endfor %}
+                                        {% else %}
+                                            <span class="text-muted">No high priority keywords found</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="fw-bold text-warning">Medium Priority:</label>
+                                    <div id="mediumPriorityKeywords" class="mt-2">
+                                        {% if keywords.medium_priority %}
+                                            {% for keyword in keywords.medium_priority %}
+                                                <span class="badge bg-warning me-1 mb-1">{{ keyword }}</span>
+                                            {% endfor %}
+                                        {% else %}
+                                            <span class="text-muted">No medium priority keywords found</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="fw-bold text-info">Low Priority:</label>
+                                    <div id="lowPriorityKeywords" class="mt-2">
+                                        {% if keywords.low_priority %}
+                                            {% for keyword in keywords.low_priority %}
+                                                <span class="badge bg-info me-1 mb-1">{{ keyword }}</span>
+                                            {% endfor %}
+                                        {% else %}
+                                            <span class="text-muted">No low priority keywords found</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Requirements Analysis</h6>
+                                {% if requirements %}
+                                    <div class="mb-3">
+                                        <label class="fw-bold">Technical Skills:</label>
+                                        <ul class="list-unstyled ms-3">
+                                            {% for skill in requirements.technical_skills or [] %}
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>{{ skill }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="fw-bold">Soft Skills:</label>
+                                        <ul class="list-unstyled ms-3">
+                                            {% for skill in requirements.soft_skills or [] %}
+                                                <li><i class="fas fa-heart text-primary me-2"></i>{{ skill }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="fw-bold">Experience Requirements:</label>
+                                        <ul class="list-unstyled ms-3">
+                                            {% for exp in requirements.experience or [] %}
+                                                <li><i class="fas fa-calendar text-warning me-2"></i>{{ exp }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted">No requirements analysis available</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center mt-4">
+            <button type="button" class="btn btn-outline-secondary me-3" onclick="history.back()">
+                <i class="fas fa-arrow-left me-2"></i>Back to Processing
+            </button>
+            <button type="button" class="btn btn-success btn-lg px-5" onclick="proceedToDownload()">
+                <i class="fas fa-download me-2"></i>Generate Final Documents
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    const sessionId = '{{ session.id }}';
+    let hasUnsavedChanges = false;
+    
+    // Auto-save functionality
+    let saveTimeout;
+    
+    window.documentChanged = function(documentType) {
+        hasUnsavedChanges = true;
+        
+        // Clear existing timeout
+        if (saveTimeout) {
+            clearTimeout(saveTimeout);
+        }
+        
+        // Set new timeout for auto-save
+        saveTimeout = setTimeout(() => {
+            saveDocument(documentType, true); // true = silent save
+        }, 2000); // Auto-save after 2 seconds of inactivity
+    };
+    
+    window.saveDocument = function(documentType, silent = false) {
+        const editorId = documentType === 'resume' ? 'resumeEditor' : 'coverLetterEditor';
+        const content = document.getElementById(editorId).value;
+        
+        if (!silent) {
+            showLoading($(`button[onclick="saveDocument('${documentType}')"]`));
+        }
+        
+        $.ajax({
+            url: `/api/update-document/${sessionId}`,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                document_type: documentType,
+                content: content
+            }),
+            success: function(response) {
+                if (response.success) {
+                    if (!silent) {
+                        showSuccessMessage('Document saved successfully!');
+                        hideLoading($(`button[onclick="saveDocument('${documentType}')"]`), '<i class="fas fa-save me-1"></i>Save Changes');
+                    }
+                    
+                    // Update scores
+                    updateScores(response.scores);
+                    hasUnsavedChanges = false;
+                } else {
+                    if (!silent) {
+                        showErrorMessage('Failed to save document: ' + response.error);
+                        hideLoading($(`button[onclick="saveDocument('${documentType}')"]`), '<i class="fas fa-save me-1"></i>Save Changes');
+                    }
+                }
+            },
+            error: function() {
+                if (!silent) {
+                    showErrorMessage('Network error occurred while saving');
+                    hideLoading($(`button[onclick="saveDocument('${documentType}')"]`), '<i class="fas fa-save me-1"></i>Save Changes');
+                }
+            }
+        });
+    };
+    
+    function updateScores(scores) {
+        updateScore($('#keywordScoreDisplay'), scores.keyword_match);
+        updateScore($('#atsScoreDisplay'), scores.ats_compatibility);
+        updateScore($('#relevanceScoreDisplay'), scores.content_relevance);
+        updateScore($('#overallScoreDisplay'), scores.overall);
+        
+        // Update progress bars
+        $('.progress .progress-bar').each(function(index) {
+            const scoreValue = Object.values(scores)[index];
+            $(this).css('width', (scoreValue * 10) + '%');
+        });
+    }
+    
+    window.proceedToDownload = function() {
+        if (hasUnsavedChanges) {
+            if (confirm('You have unsaved changes. Save them before proceeding?')) {
+                // Save current document
+                const activeTab = $('.nav-link.active').attr('id');
+                const documentType = activeTab.includes('resume') ? 'resume' : 'cover_letter';
+                saveDocument(documentType);
+                
+                setTimeout(() => {
+                    window.location.href = `/download/${sessionId}`;
+                }, 1000);
+            } else {
+                window.location.href = `/download/${sessionId}`;
+            }
+        } else {
+            window.location.href = `/download/${sessionId}`;
+        }
+    };
+    
+    function showSuccessMessage(message) {
+        const alert = $(`
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `);
+        $('.container').prepend(alert);
+        
+        setTimeout(() => {
+            alert.fadeOut();
+        }, 3000);
+    }
+    
+    function showErrorMessage(message) {
+        const alert = $(`
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `);
+        $('.container').prepend(alert);
+    }
+    
+    // Warn about unsaved changes
+    window.addEventListener('beforeunload', function(e) {
+        if (hasUnsavedChanges) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+});
+</script>
+{% endblock %}

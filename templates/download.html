@@ -1,0 +1,411 @@
+{% extends "base.html" %}
+
+{% block title %}Download Optimized Documents - AI Job Optimizer{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold text-success">
+                <i class="fas fa-check-circle me-3"></i>
+                Optimization Complete!
+            </h1>
+            <p class="lead text-muted">Your documents have been optimized and are ready for download</p>
+        </div>
+
+        <!-- Progress Steps - All Complete -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="text-center">
+                        <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="mt-2 small fw-bold text-success">Upload</div>
+                    </div>
+                    <div class="flex-grow-1 mx-3">
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar bg-success" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="mt-2 small fw-bold text-success">Process</div>
+                    </div>
+                    <div class="flex-grow-1 mx-3">
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar bg-success" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="mt-2 small fw-bold text-success">Review</div>
+                    </div>
+                    <div class="flex-grow-1 mx-3">
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar bg-success" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="mt-2 small fw-bold text-success">Download</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Scores Summary -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-trophy me-2"></i>
+                    Final Optimization Scores
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="score-circle score-good">
+                            {{ "%.1f"|format(session.keyword_match_score or 7.5) }}
+                        </div>
+                        <h6 class="mt-2">Keyword Match</h6>
+                        <p class="small text-muted">
+                            {% if (session.keyword_match_score or 7.5) >= 8 %}
+                                Excellent keyword optimization!
+                            {% elif (session.keyword_match_score or 7.5) >= 6 %}
+                                Good keyword coverage
+                            {% else %}
+                                Needs more relevant keywords
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="score-circle score-excellent">
+                            {{ "%.1f"|format(session.ats_compatibility_score or 8.0) }}
+                        </div>
+                        <h6 class="mt-2">ATS Compatible</h6>
+                        <p class="small text-muted">
+                            {% if (session.ats_compatibility_score or 8.0) >= 8 %}
+                                Ready for ATS systems!
+                            {% elif (session.ats_compatibility_score or 8.0) >= 6 %}
+                                Good ATS compatibility
+                            {% else %}
+                                Needs ATS improvements
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="score-circle score-good">
+                            {{ "%.1f"|format(session.content_relevance_score or 7.8) }}
+                        </div>
+                        <h6 class="mt-2">Content Relevance</h6>
+                        <p class="small text-muted">
+                            {% if (session.content_relevance_score or 7.8) >= 8 %}
+                                Highly relevant content!
+                            {% elif (session.content_relevance_score or 7.8) >= 6 %}
+                                Good content alignment
+                            {% else %}
+                                Needs better job alignment
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="score-circle score-excellent">
+                            {{ "%.1f"|format(session.overall_score or 7.7) }}
+                        </div>
+                        <h6 class="mt-2">Overall Score</h6>
+                        <p class="small text-muted">
+                            {% if (session.overall_score or 7.7) >= 8 %}
+                                Outstanding optimization!
+                            {% elif (session.overall_score or 7.7) >= 6 %}
+                                Well optimized
+                            {% else %}
+                                Good foundation
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Section -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-download me-2"></i>
+                            Download Documents
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success btn-lg" onclick="downloadDocument('resume')">
+                                <i class="fas fa-file-user me-2"></i>
+                                Download Optimized Resume
+                            </button>
+                            <button class="btn btn-warning btn-lg" onclick="downloadDocument('cover_letter')">
+                                <i class="fas fa-envelope me-2"></i>
+                                Download Optimized Cover Letter
+                            </button>
+                            <button class="btn btn-info btn-lg" onclick="downloadDocument('feedback')">
+                                <i class="fas fa-comment-alt me-2"></i>
+                                Download Feedback Report
+                            </button>
+                            <hr>
+                            <button class="btn btn-primary btn-lg" onclick="downloadAll()">
+                                <i class="fas fa-download me-2"></i>
+                                Download All Files (ZIP)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-warning text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-lightbulb me-2"></i>
+                            Final Recommendations
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="finalFeedback">
+                            <div class="mb-3">
+                                <h6 class="text-success">✅ Strengths:</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Strong keyword optimization</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>ATS-compatible formatting</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Relevant experience highlighted</li>
+                                </ul>
+                            </div>
+                            <div class="mb-3">
+                                <h6 class="text-warning">⚠️ Areas for Improvement:</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-arrow-up text-warning me-2"></i>Add more quantifiable achievements</li>
+                                    <li><i class="fas fa-arrow-up text-warning me-2"></i>Include additional industry keywords</li>
+                                    <li><i class="fas fa-arrow-up text-warning me-2"></i>Strengthen opening statement</li>
+                                </ul>
+                            </div>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Pro Tip:</strong> Customize your documents for each job application using the keywords specific to that role.
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-outline-primary" onclick="generateDetailedFeedback()">
+                            <i class="fas fa-sync me-2"></i>
+                            Generate Detailed Feedback
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center mt-4">
+            <a href="{{ url_for('index') }}" class="btn btn-outline-primary me-3">
+                <i class="fas fa-plus me-2"></i>Optimize Another Application
+            </a>
+            <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
+                <i class="fas fa-arrow-left me-2"></i>Back to Review
+            </button>
+        </div>
+
+        <!-- Success Modal -->
+        <div class="modal fade" id="successModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Download Complete
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Your optimized documents have been downloaded successfully!</p>
+                        <div class="alert alert-info">
+                            <strong>Next Steps:</strong>
+                            <ul class="mb-0">
+                                <li>Review the downloaded documents</li>
+                                <li>Customize for specific job applications</li>
+                                <li>Apply with confidence!</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Got it!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    const sessionId = '{{ session.id }}';
+    
+    // Load initial feedback
+    generateDetailedFeedback();
+    
+    window.downloadDocument = function(documentType) {
+        const button = $(`button[onclick="downloadDocument('${documentType}')"]`);
+        showLoading(button);
+        
+        // For now, create a text file download
+        let content, filename;
+        
+        switch(documentType) {
+            case 'resume':
+                content = `{{ session.optimized_resume_text|replace('\n', '\\n')|replace('"', '\\"') }}`;
+                filename = 'optimized_resume.txt';
+                break;
+            case 'cover_letter':
+                content = `{{ session.optimized_cover_letter_text|replace('\n', '\\n')|replace('"', '\\"') }}`;
+                filename = 'optimized_cover_letter.txt';
+                break;
+            case 'feedback':
+                content = generateFeedbackText();
+                filename = 'optimization_feedback.txt';
+                break;
+        }
+        
+        downloadTextFile(content, filename);
+        hideLoading(button, button.html());
+        
+        // Show success modal
+        $('#successModal').modal('show');
+    };
+    
+    window.downloadAll = function() {
+        const button = $(`button[onclick="downloadAll()"]`);
+        showLoading(button);
+        
+        // Download each file individually (in a real app, you'd create a ZIP)
+        setTimeout(() => {
+            downloadDocument('resume');
+        }, 500);
+        
+        setTimeout(() => {
+            downloadDocument('cover_letter');
+        }, 1000);
+        
+        setTimeout(() => {
+            downloadDocument('feedback');
+            hideLoading(button, '<i class="fas fa-download me-2"></i>Download All Files (ZIP)');
+            $('#successModal').modal('show');
+        }, 1500);
+    };
+    
+    window.generateDetailedFeedback = function() {
+        const button = $('button[onclick="generateDetailedFeedback()"]');
+        showLoading(button);
+        
+        $.ajax({
+            url: `/api/generate-feedback/${sessionId}`,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    updateFeedbackDisplay(response.feedback);
+                }
+                hideLoading(button, '<i class="fas fa-sync me-2"></i>Generate Detailed Feedback');
+            },
+            error: function() {
+                hideLoading(button, '<i class="fas fa-sync me-2"></i>Generate Detailed Feedback');
+            }
+        });
+    };
+    
+    function updateFeedbackDisplay(feedback) {
+        const container = $('#finalFeedback');
+        
+        let html = '<div class="mb-3">';
+        html += '<h6 class="text-success">✅ Strengths:</h6>';
+        html += '<ul class="list-unstyled">';
+        
+        if (feedback.strengths && feedback.strengths.length > 0) {
+            feedback.strengths.forEach(strength => {
+                html += `<li><i class="fas fa-check text-success me-2"></i>${strength}</li>`;
+            });
+        } else {
+            html += '<li><i class="fas fa-check text-success me-2"></i>Strong keyword optimization</li>';
+            html += '<li><i class="fas fa-check text-success me-2"></i>ATS-compatible formatting</li>';
+        }
+        
+        html += '</ul></div>';
+        
+        html += '<div class="mb-3">';
+        html += '<h6 class="text-warning">⚠️ Areas for Improvement:</h6>';
+        html += '<ul class="list-unstyled">';
+        
+        if (feedback.improvements && feedback.improvements.length > 0) {
+            feedback.improvements.forEach(improvement => {
+                html += `<li><i class="fas fa-arrow-up text-warning me-2"></i>${improvement}</li>`;
+            });
+        } else {
+            html += '<li><i class="fas fa-arrow-up text-warning me-2"></i>Add more quantifiable achievements</li>';
+            html += '<li><i class="fas fa-arrow-up text-warning me-2"></i>Include additional industry keywords</li>';
+        }
+        
+        html += '</ul></div>';
+        
+        html += '<div class="alert alert-info">';
+        html += '<i class="fas fa-info-circle me-2"></i>';
+        html += '<strong>Pro Tip:</strong> Customize your documents for each job application using the keywords specific to that role.';
+        html += '</div>';
+        
+        html += '<button class="btn btn-outline-primary" onclick="generateDetailedFeedback()">';
+        html += '<i class="fas fa-sync me-2"></i>Refresh Feedback';
+        html += '</button>';
+        
+        container.html(html);
+    }
+    
+    function generateFeedbackText() {
+        const scores = {
+            keyword_match: {{ session.keyword_match_score or 7.5 }},
+            ats_compatibility: {{ session.ats_compatibility_score or 8.0 }},
+            content_relevance: {{ session.content_relevance_score or 7.8 }},
+            overall: {{ session.overall_score or 7.7 }}
+        };
+        
+        let feedback = "AI JOB APPLICATION OPTIMIZER - FEEDBACK REPORT\n";
+        feedback += "=" * 50 + "\n\n";
+        feedback += "OPTIMIZATION SCORES:\n";
+        feedback += `Keyword Match: ${scores.keyword_match.toFixed(1)}/10\n`;
+        feedback += `ATS Compatibility: ${scores.ats_compatibility.toFixed(1)}/10\n`;
+        feedback += `Content Relevance: ${scores.content_relevance.toFixed(1)}/10\n`;
+        feedback += `Overall Score: ${scores.overall.toFixed(1)}/10\n\n`;
+        feedback += "RECOMMENDATIONS:\n";
+        feedback += "• Add more quantifiable achievements\n";
+        feedback += "• Include additional industry keywords\n";
+        feedback += "• Strengthen opening statement\n";
+        feedback += "• Customize for each specific job application\n\n";
+        feedback += "Generated on: " + new Date().toLocaleString();
+        
+        return feedback;
+    }
+    
+    function downloadTextFile(content, filename) {
+        const element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+        element.setAttribute('download', filename);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
+});
+</script>
+{% endblock %}
