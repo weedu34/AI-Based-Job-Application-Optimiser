@@ -11,3 +11,9 @@ pdfplumber
 docx2txt
 Werkzeug
 requests
+pytest
+pytest-flask
+pytest-cov
+pytest-mock
+factory-boy
+faker

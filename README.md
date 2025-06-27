@@ -30,14 +30,14 @@ An intelligent Flask web application that uses AI to analyze job descriptions an
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/weedu34/AI-Based-Job-Application-Optimiser.git
    cd job-optimizer
    ```
 
 2. **Create virtual environment**
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   python -m venv job_optimiser_venv
+   source job_optimiser_venv/bin/activate  # On Windows: job_optimiser_venv\Scripts\activate
    ```
 
 3. **Install dependencies**
@@ -148,8 +148,12 @@ job_optimizer/
 │   ├── ats_checker.py
 │   ├── feedback_generator.py
 │   └── document_generator.py
-└── database/           # Database models
-    └── models.py
+├── database/           # Database models
+│   └── models.py
+└── tests/             # Test suite
+    ├── __init__.py
+    ├── conftest.py
+    └── test_basic_functionality.py
 ```
 
 ## Configuration
@@ -170,6 +174,176 @@ job_optimizer/
 - **Resumes**: PDF, DOCX
 - **Cover Letters**: PDF, DOCX, TXT
 
+## Testing
+
+### 🧪 Testing Overview
+
+Our comprehensive testing suite ensures reliability and maintainability using pytest. The tests cover:
+- **Unit Tests** - Individual functions and components
+- **Integration Tests** - API endpoints and database operations
+- **File Upload Tests** - Document handling and validation
+- **Error Handling Tests** - Failure scenarios and edge cases
+- **Mocked External Services** - AI analysis and document parsing
+
+### Test Coverage
+
+#### Core Functionality Tested
+- ✅ **File Upload & Validation** - Document type checking, file security, missing file handling
+- ✅ **Session Management** - Processing session creation, status transitions, database persistence
+- ✅ **API Endpoints** - Document analysis, document updates, feedback generation
+- ✅ **Database Operations** - CRUD operations, version management, score calculations
+- ✅ **Error Scenarios** - Parser failures, AI service failures, invalid inputs
+- ✅ **Workflow States** - Page access control, session state validation
+
+#### External Dependencies Mocked
+- **DocumentParser** - Controlled success/failure responses
+- **JobAnalyzer** - Mocked AI analysis without OpenAI API calls
+- **File Operations** - Temporary directories for isolated testing
+
+### Quick Start
+
+#### Install Testing Dependencies
+```bash
+pip install pytest pytest-flask pytest-cov pytest-mock factory-boy faker
+```
+
+#### Run Tests
+```bash
+# Run all tests
+pytest
+
+# Run with verbose output
+pytest -v
+
+# Run with coverage report
+pytest --cov=app --cov=database --cov-report=html
+
+# Run specific test categories
+pytest -m unit          # Unit tests only
+pytest -m api           # API tests only
+pytest -m upload        # File upload tests only
+```
+
+### Test Structure
+
+```
+tests/
+├── __init__.py                     # Empty file for Python package
+├── conftest.py                     # Test configuration and fixtures
+├── test_basic_functionality.py    # Core functionality tests
+└── pytest.ini                     # Pytest configuration
+```
+
+#### Key Test Files
+
+- **`conftest.py`** - App configuration, test database setup, fixtures, mocking setup
+- **`test_basic_functionality.py`** - Comprehensive tests for all core functionality
+
+### Running Specific Tests
+
+```bash
+# By test file
+pytest tests/test_basic_functionality.py
+
+# By test class
+pytest tests/test_basic_functionality.py::TestFileUpload
+
+# By individual test
+pytest tests/test_basic_functionality.py::TestFileUpload::test_upload_with_job_description_text_only
+
+# By markers
+pytest -m "not slow"        # Skip slow tests
+pytest -m "api and upload"  # Run API and upload tests
+
+# With coverage
+pytest --cov=app --cov=database --cov-report=html
+# Open htmlcov/index.html to view detailed coverage
+```
+
+### Debugging Tests
+
+```bash
+# Verbose output with print statements
+pytest -v -s
+
+# Stop on first failure
+pytest -x
+
+# Run last failed tests only
+pytest --lf
+
+# Debug specific failing test
+pytest tests/test_basic_functionality.py::TestAPIEndpoints::test_analyze_endpoint -v -s
+```
+
+### Common Testing Issues
+
+#### ImportError: No module named 'app'
+```bash
+# Ensure you're in the project root directory
+cd /path/to/your/project
+pytest
+```
+
+#### Database Connection Errors
+```bash
+# Check that your models are importable
+python -c "from database.models import db, ProcessingSession"
+```
+
+#### Missing Dependencies
+```bash
+# Install all test dependencies
+pip install pytest pytest-flask pytest-cov pytest-mock
+```
+
+### Adding New Tests
+
+#### Create New Test File
+```python
+# tests/test_new_feature.py
+import pytest
+
+class TestNewFeature:
+    def test_new_functionality(self, client):
+        response = client.get('/new-endpoint')
+        assert response.status_code == 200
+```
+
+#### Use Existing Fixtures
+```python
+def test_with_session(self, client, sample_session):
+    # sample_session is available from conftest.py
+    response = client.get(f'/api/something/{sample_session}')
+    assert response.status_code == 200
+```
+
+### Test Performance
+
+- **Full test suite**: ~5-15 seconds
+- **Unit tests only**: ~2-5 seconds
+- **Individual test**: ~0.1-1 seconds
+
+#### Optimization Tips
+```bash
+# Run tests in parallel (requires pytest-xdist)
+pip install pytest-xdist
+pytest -n auto
+
+# Skip slow tests during development
+pytest -m "not slow"
+```
+
+### CI/CD Integration
+
+#### GitHub Actions Example
+```yaml
+- name: Run Tests
+  run: |
+    pip install pytest pytest-flask pytest-cov
+    pytest --cov=app --cov-report=xml
+```
+
 ## Development
 
 ### Adding New Features
@@ -188,18 +362,12 @@ When adding new fields to models:
 python -c "from app import create_app, db; app = create_app(); app.app_context().push(); db.create_all()"
 ```
 
-### Testing
+### Development Workflow
 
-```bash
-# Run basic tests
-python -m pytest tests/
-
-# Test document parsing
-python -c "from modules.document_parser import DocumentParser; print(DocumentParser.parse_document('test.pdf'))"
-
-# Test job analysis
-python -c "from modules.job_analyzer import JobAnalyzer; analyzer = JobAnalyzer(); print(analyzer.analyze_job_description('test job description'))"
-```
+1. **Write tests first** - Test-driven development approach
+2. **Run tests frequently** - Catch issues early
+3. **Maintain test coverage** - Aim for >80% coverage
+4. **Mock external services** - Keep tests fast and reliable
 
 ## Deployment
 
@@ -254,6 +422,11 @@ CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
    - Run database initialization: `python -c "from app import create_app, init_db; app = create_app(); init_db(app)"`
    - Check file permissions for SQLite database
 
+5. **Test failures**
+   - Ensure all testing dependencies are installed: `pip install pytest pytest-flask pytest-cov pytest-mock`
+   - Check that you're in the project root directory
+   - Verify database models are importable
+
 ### Performance Optimization
 
 - Use Redis for caching analysis results
@@ -267,8 +440,18 @@ CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Add tests
-5. Submit a pull request
+4. **Add tests for new functionality**
+5. **Run the test suite**: `pytest`
+6. **Ensure tests pass** and maintain coverage
+7. Submit a pull request
+
+### Testing Guidelines for Contributors
+
+- Write tests for all new features
+- Maintain or improve test coverage
+- Use descriptive test names
+- Mock external dependencies
+- Follow existing test patterns in `tests/test_basic_functionality.py`
 
 ## License
 
@@ -279,6 +462,7 @@ This project is licensed under the MIT License. See LICENSE file for details.
 For support and questions:
 - Check troubleshooting section
 - Review API documentation
+- **Run the test suite** to verify setup: `pytest -v`
 - Create an issue on GitHub
 - Contact support team
 
@@ -293,6 +477,8 @@ For support and questions:
 - [ ] Mobile app
 - [ ] Multi-language support
 - [ ] Interview preparation features
+- [ ] **Enhanced test coverage** for new features
+- [ ] **Performance testing** for large files
 
 ### Known Limitations
 - OpenAI API rate limits
